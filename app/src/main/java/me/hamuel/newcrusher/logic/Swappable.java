@@ -1,4 +1,4 @@
-package logic;
+package me.hamuel.newcrusher.logic;
 
 public interface Swappable {
     /**

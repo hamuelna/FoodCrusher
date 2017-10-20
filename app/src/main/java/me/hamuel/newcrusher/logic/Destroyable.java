@@ -1,4 +1,4 @@
-package logic;
+package me.hamuel.newcrusher.logic;
 
 import me.hamuel.newcrusher.model.Board;
 import me.hamuel.newcrusher.model.Cell;
