@@ -1,4 +1,8 @@
-package me.hamuel.newcrusher.model;
+package logic;
+
+import me.hamuel.newcrusher.model.Cell;
+import me.hamuel.newcrusher.model.CellType;
+import me.hamuel.newcrusher.model.Coordinate;
 
 public interface Creatable {
     /**

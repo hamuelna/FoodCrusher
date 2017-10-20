@@ -1,4 +1,7 @@
-package me.hamuel.newcrusher.model;
+package logic;
+
+import me.hamuel.newcrusher.model.Board;
+import me.hamuel.newcrusher.model.Cell;
 
 public class DefaultSwapper implements Swappable {
     private int MINIMUM_CONSECUTIVE_CELL = 3;

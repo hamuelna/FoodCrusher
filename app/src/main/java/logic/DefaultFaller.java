@@ -1,4 +1,8 @@
-package me.hamuel.newcrusher.model;
+package logic;
+
+import me.hamuel.newcrusher.model.Board;
+import me.hamuel.newcrusher.model.Cell;
+import me.hamuel.newcrusher.model.CellPair;
 
 import java.util.List;
 

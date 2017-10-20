@@ -1,4 +1,4 @@
-package me.hamuel.newcrusher.model;
+package logic;
 
 public interface Swappable {
     /**
