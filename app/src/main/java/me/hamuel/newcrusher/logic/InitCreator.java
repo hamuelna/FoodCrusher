@@ -14,15 +14,31 @@ public class InitCreator implements Creatable {
     @Override
     public Cell generateCell(int row, int col, Coordinate coordinate, Board board) {
         Cell[][] board1 = board.getBoard();
-        CellType allTypes[] = CellType.values();
+        CellType types[] = getTypes(); // all type except BLANK
+
         ArrayList<CellType> forbidTypes = checkAll(row, col, board1);
-        CellType randType = randomType(allTypes);
+        CellType randType = randomType(types);
+
         while(forbidTypes.contains(randType)){
-            randType = randomType(allTypes);
+            randType = randomType(types);
         }
         return new Cell(row, col, coordinate, randType);
     }
 
+    /**
+     * return static list of all types except BLANK
+     * @return
+     */
+    private CellType[] getTypes(){
+        CellType allTypes[] = CellType.values(); // all types including BLANK
+        CellType types[] = new CellType[allTypes.length-1];
+        for (int i = 0; i < types.length; i++) {
+            if (types[i] != CellType.BLANK){
+                allTypes[i] = types[i];
+            }
+        }
+        return types;
+    }
 
     private CellType randomType(CellType types[]){
         Random random = new Random();
@@ -30,6 +46,13 @@ public class InitCreator implements Creatable {
         return types[index];
     }
 
+    /**
+     * return arraylist of forbidden type
+     * @param row
+     * @param col
+     * @param board
+     * @return
+     */
     private ArrayList<CellType> checkAll(int row, int col, Cell[][] board){
 
         ArrayList<CellType> forbidType = new ArrayList<>();
