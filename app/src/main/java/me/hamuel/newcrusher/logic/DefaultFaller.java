@@ -24,6 +24,8 @@ public class DefaultFaller implements Fallable {
         return line;
     }
 
+    //return a cell pair that need switching only
+
     private List<CellPair> logicalCollaspe(Cell[][] board, int icol){
         LinkedList<Cell> blankCells = new LinkedList<>();
         LinkedList<Cell> activeCells = new LinkedList<>();
