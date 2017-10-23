@@ -1,5 +1,8 @@
 package me.hamuel.newcrusher.logic;
 
+import me.hamuel.newcrusher.model.Board;
+import me.hamuel.newcrusher.model.CellPair;
+
 import java.util.List;
 
 public interface Fallable {

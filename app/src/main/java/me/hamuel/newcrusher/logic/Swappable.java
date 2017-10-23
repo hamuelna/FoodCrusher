@@ -1,5 +1,8 @@
 package me.hamuel.newcrusher.logic;
 
+import me.hamuel.newcrusher.model.Board;
+import me.hamuel.newcrusher.model.Cell;
+
 public interface Swappable {
     /**
      * Check whether the two cell is swappable

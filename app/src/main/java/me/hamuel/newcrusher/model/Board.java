@@ -1,5 +1,7 @@
 package me.hamuel.newcrusher.model;
 
+import me.hamuel.newcrusher.logic.Creatable;
+
 public class Board {
     private Cell[][] board;
     private int dim;
@@ -7,6 +9,7 @@ public class Board {
     private final int HORIZONTAL_OFFSET = 100;
     private final int SIDE_LENGTH = 50;
     private final int GAP = 10;
+    private Creatable creator;
 
     public Board(int dim) {
         this.dim = dim;
