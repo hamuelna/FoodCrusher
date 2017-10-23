@@ -2,6 +2,7 @@ package me.hamuel.newcrusher.logic;
 
 import me.hamuel.newcrusher.model.Board;
 import me.hamuel.newcrusher.model.Cell;
+import me.hamuel.newcrusher.model.CellType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,9 +17,9 @@ public class DefaultDestroyer implements Destroyable {
         Cell[][] currentBoard = board.getBoard();
         Set<Cell> combineNeedToBeDestroy = scanHorizontal(currentBoard);
         combineNeedToBeDestroy.addAll(scanVertical(currentBoard));
-        //actually remove the cell in the board
+        //actually remove the cell in the board by setting it to blank
         for(Cell destroyCell: combineNeedToBeDestroy){
-            currentBoard[destroyCell.getRow()][destroyCell.getCol()] = null;
+            currentBoard[destroyCell.getRow()][destroyCell.getCol()].setType(CellType.BLANK);
         }
         return combineNeedToBeDestroy;
     }

@@ -6,6 +6,10 @@ public class Cell {
     private Coordinate coordinate;
     private CellType type;
 
+    public void setType(CellType type) {
+        this.type = type;
+    }
+
     public Cell(int row, int col, Coordinate coordinate, CellType type) {
         this.row = row;
         this.col = col;
@@ -52,4 +56,9 @@ public class Cell {
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
+
+    public Cell clone() {
+        return new Cell(this.row, this.col, this.coordinate, this.type);
+    }
+
 }
