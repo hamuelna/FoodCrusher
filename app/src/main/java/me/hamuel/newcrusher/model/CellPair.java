@@ -16,4 +16,12 @@ public class CellPair {
     public Cell getTo() {
         return to;
     }
+
+    public void setFrom(Cell from) {
+        this.from = from;
+    }
+
+    public void setTo(Cell to) {
+        this.to = to;
+    }
 }

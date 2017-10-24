@@ -2,6 +2,9 @@ package me.hamuel.newcrusher.logic;
 
 import me.hamuel.newcrusher.model.Board;
 import me.hamuel.newcrusher.model.Cell;
+import me.hamuel.newcrusher.model.CellPair;
+
+import java.util.List;
 
 public interface Swappable {
     /**
@@ -17,6 +20,7 @@ public interface Swappable {
      * you need to swap the cell back if it is not swappable
      * @param a
      * @param b
+     * @return list of cell pair if it is swappable if not return null
      */
-    void swap(Cell a, Cell b, Board board);
+    List<CellPair> swap(Cell a, Cell b, Board board);
 }

@@ -2,6 +2,10 @@ package me.hamuel.newcrusher.logic;
 
 import me.hamuel.newcrusher.model.Board;
 import me.hamuel.newcrusher.model.Cell;
+import me.hamuel.newcrusher.model.CellPair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultSwapper implements Swappable {
     private int MINIMUM_CONSECUTIVE_CELL = 3;
@@ -13,15 +17,23 @@ public class DefaultSwapper implements Swappable {
 
     @Override
     @SuppressWarnings("Duplicates")
-    public void swap(Cell a, Cell b, Board board) {
+    public List<CellPair> swap(Cell a, Cell b, Board board) {
         Cell[][] currentBoard = board.getBoard();
+        List<CellPair> cellPairs = new ArrayList<>();
         //temporary swap the cell
         logicSwap(a, b, currentBoard);
-
+        CellPair a_ = new CellPair(a.clone(), null);
+        CellPair b_ = new CellPair(b.clone(), null);
         if(!isSwappable(a,b, board)){
             //if it is not swappable swap the state back
             logicSwap(a,b, currentBoard);
+            return null;
         }
+        a_.setTo(a);
+        b_.setTo(b);
+        cellPairs.add(a_);
+        cellPairs.add(b_);
+        return cellPairs;
 
     }
 
