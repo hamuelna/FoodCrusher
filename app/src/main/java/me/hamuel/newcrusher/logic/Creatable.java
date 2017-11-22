@@ -5,13 +5,14 @@ import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellType;
 import me.hamuel.newcrusher.model.Coordinate;
 
+import java.util.List;
+
 public interface Creatable {
+
     /**
-     * Generate the cell according according to the strategy
-     * @param row
-     * @param col
-     * @param coordinate
-     * @return
+     * Fill the board according to our strategy for example can
+     * be use to initialize the board or fill in the empty Cell with a proper cell
+     * @param board
      */
-    Cell generateCell (int row, int col, Coordinate coordinate, Board board);
+    List<Cell> fillBoard(Board board);
 }

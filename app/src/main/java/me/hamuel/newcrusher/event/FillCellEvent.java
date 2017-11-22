@@ -1,9 +1,8 @@
-package me.hamuel.newcrusher.controller;
+package me.hamuel.newcrusher.event;
 
 import android.content.res.Resources;
 import android.graphics.*;
 import me.hamuel.newcrusher.R;
-import me.hamuel.newcrusher.model.Board;
 import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellView;
 import me.hamuel.newcrusher.model.Coordinate;
@@ -11,27 +10,22 @@ import me.hamuel.newcrusher.model.Coordinate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardAdapter {
-    private Resources resources;
-
-    public BoardAdapter(Resources resources) {
-        this.resources = resources;
+public class FillCellEvent {
+    public FillCellEvent(List<Cell> board) {
+        this.board = board;
     }
 
-    public List<CellView> getViewBoard(Board board) {
-        Cell[][] board_ = board.getBoard();
-        List<CellView> cellViews = new ArrayList<>();
-        for(Cell[] cellRows: board_){
-            for(Cell cell: cellRows){
-                if(cell != null){
-                    cellViews.add(cellConverter(cell));
-                }
-            }
+    List<Cell> board;
+
+    public List<CellView> getCellView(Resources resources) {
+        List<CellView> boardView = new ArrayList<>();
+        for(Cell cell: board){
+            boardView.add(cellConverter(resources, cell));
         }
-        return cellViews;
+        return boardView;
     }
 
-    private CellView cellConverter(Cell cell) {
+    private CellView cellConverter(Resources resources, Cell cell) {
         Coordinate cord = cell.getCoordinate();
         Paint paint = null;
         Bitmap type = null;
@@ -67,6 +61,4 @@ public class BoardAdapter {
                 paint,
                 type);
     }
-
-
 }

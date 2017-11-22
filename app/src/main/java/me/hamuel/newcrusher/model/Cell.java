@@ -61,6 +61,16 @@ public class Cell {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "row=" + row +
+                ", col=" + col +
+                ", coordinate=" + coordinate +
+                ", type=" + type +
+                '}';
+    }
+
     public Cell clone() {
         return new Cell(this.row, this.col, this.coordinate, this.type);
     }

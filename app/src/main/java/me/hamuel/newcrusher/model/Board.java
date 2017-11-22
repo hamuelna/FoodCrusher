@@ -1,6 +1,9 @@
 package me.hamuel.newcrusher.model;
 
+import me.hamuel.newcrusher.event.*;
 import me.hamuel.newcrusher.logic.*;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,18 +12,18 @@ import java.util.List;
 public class Board {
     private Cell[][] board;
     private int dim;
-    private final int VERTICAL_OFFSET = 40;
-    private final int HORIZONTAL_OFFSET = 100;
-    private final int SIDE_LENGTH = 50;
-    private final int GAP = 10;
+    public final int VERTICAL_OFFSET = 40;
+    public final int HORIZONTAL_OFFSET = 100;
+    public final int SIDE_LENGTH = 50;
+    public final int GAP = 10;
     private Creatable creator;
-    private List<Destroyable> destroyables;
-    private List<Fallable> fallables;
-    private List<Swappable> swappables;
+    private List<Destroyable> destroyables = new ArrayList<>();
+    private List<Fallable> fallables = new ArrayList<>();
+    private List<Swappable> swappables = new ArrayList<>();
 
     public Board(int dim) {
         this.dim = dim;
-        board = initBoard();
+        board = new Cell[dim][dim];
         destroyables.addAll(Arrays.asList(
                 new DefaultDestroyer()
         ));
@@ -32,32 +35,10 @@ public class Board {
         swappables.addAll(Arrays.asList(
                 new DefaultSwapper()
         ));
-        creator = new InitCreator();
-    }
 
-    private Cell[][] initBoard(){
-        int vert = VERTICAL_OFFSET;
-        int horz = HORIZONTAL_OFFSET;
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                board[i][j] = new Cell(
-                        i,
-                        j,
-                        new Coordinate(horz, vert, horz + SIDE_LENGTH, vert + SIDE_LENGTH),
-                        CellType.BLANK
-                );
-                horz += SIDE_LENGTH + GAP;
-            }
-            vert+= SIDE_LENGTH + GAP;
-        }
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                board[i][j] = creator.generateCell(i,j,
-                        new Coordinate(horz, vert, horz + SIDE_LENGTH, vert + SIDE_LENGTH),
-                        this);
-            }
-        }
-        return board;
+        InitBoard initBoard = new InitBoard();
+        //send message to frontend what to initialize
+        EventBus.getDefault().post(new FillCellEvent(initBoard.fillBoard(this)));
     }
 
 
@@ -95,7 +76,16 @@ public class Board {
         return destroyedCell;
     }
 
-    public List<CellPair> collaspe(){
+    public boolean isDestroyable(){
+        for(Destroyable destroyer: destroyables){
+            if(destroyer.isDestroyable(this)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<CellPair> collapse(){
         List<CellPair> movedPostion = new ArrayList<>();
         for(Fallable faller: fallables){
             movedPostion.addAll(faller.collapse(this));
@@ -103,5 +93,44 @@ public class Board {
         return movedPostion;
     }
 
+    public int getDim() {
+        return dim;
+    }
 
+    private Cell findCell(Coordinate coordinate){
+        for(Cell[] cellRow: board){
+            for(Cell cell: cellRow){
+                if(cell.getCoordinate().equals(coordinate)){
+                    return cell;
+                }
+            }
+        }
+        System.out.println("Unable to find cell");
+        return null;
+    }
+
+    @Subscribe
+    public void onMoveCellEvent(MoveCellEvent moveCellEvent){
+        Cell a = findCell(moveCellEvent.getCellA());
+        Cell b = findCell(moveCellEvent.getCellB());
+        if(isSwappable(a, b)){
+            EventBus.getDefault().post(new AnimateCellEvent(swap(a,b)));
+        }
+
+    }
+
+    @Subscribe
+    public void onAnimationEnd(AnimationEndEvent animationEndEvent){
+        String msg = animationEndEvent.getMessage();
+        if(msg.equals("end swap")){
+            List<Coordinate> coordinates = new ArrayList<>();
+            for(Cell cell: destroy()){
+                coordinates.add(cell.getCoordinate());
+            }
+            EventBus.getDefault().post(new RemoveCellEvent(coordinates));
+        }else if(msg.equals("end destroy")){
+            //start collaspsing
+            EventBus.getDefault().post(new AnimateCellEvent(collapse()));
+        }
+    }
 }
