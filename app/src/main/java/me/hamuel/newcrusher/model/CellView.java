@@ -2,24 +2,23 @@ package me.hamuel.newcrusher.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Paint;
-import android.graphics.RectF;
 
 public class CellView {
-    private RectF coordinate;
+    private AnimatableRectF coordinate;
     private Paint paint;
     private Bitmap type;
 
-    public CellView(RectF coordinate, Paint paint, Bitmap type) {
+    public CellView(AnimatableRectF coordinate, Paint paint, Bitmap type) {
         this.coordinate = coordinate;
         this.paint = paint;
         this.type = type;
     }
 
-    public RectF getCoordinate() {
+    public AnimatableRectF getCoordinate() {
         return coordinate;
     }
 
-    public void setCoordinate(RectF coordinate) {
+    public void setCoordinate(AnimatableRectF coordinate) {
         this.coordinate = coordinate;
     }
 

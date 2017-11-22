@@ -13,4 +13,8 @@ public class RemoveCellEvent {
     public RemoveCellEvent(List<Coordinate> cellToBeRemove) {
         this.cellToBeRemove = cellToBeRemove;
     }
+
+    public List<Coordinate> getCellToBeRemove() {
+        return cellToBeRemove;
+    }
 }

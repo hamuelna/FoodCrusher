@@ -11,12 +11,18 @@ import java.util.List;
  */
 public class AnimateCellEvent {
     private List<CellPair> cellMoves;
+    private String eventName;
 
-    public AnimateCellEvent(List<CellPair> cellMoves) {
+    public AnimateCellEvent(List<CellPair> cellMoves, String eventName) {
         this.cellMoves = cellMoves;
+        this.eventName = eventName;
     }
 
     public List<CellPair> getCellMoves() {
         return cellMoves;
+    }
+
+    public String getEventName() {
+        return eventName;
     }
 }

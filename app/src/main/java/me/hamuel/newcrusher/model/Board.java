@@ -16,7 +16,6 @@ public class Board {
     public final int HORIZONTAL_OFFSET = 100;
     public final int SIDE_LENGTH = 50;
     public final int GAP = 10;
-    private Creatable creator;
     private List<Destroyable> destroyables = new ArrayList<>();
     private List<Fallable> fallables = new ArrayList<>();
     private List<Swappable> swappables = new ArrayList<>();
@@ -114,23 +113,34 @@ public class Board {
         Cell a = findCell(moveCellEvent.getCellA());
         Cell b = findCell(moveCellEvent.getCellB());
         if(isSwappable(a, b)){
-            EventBus.getDefault().post(new AnimateCellEvent(swap(a,b)));
+            EventBus.getDefault().post(new AnimateCellEvent(swap(a,b), "swap"));
         }
 
+    }
+
+    private void cellRemovalProcess(){
+        List<Coordinate> coordinates = new ArrayList<>();
+        for(Cell cell: destroy()){
+            coordinates.add(cell.getCoordinate());
+        }
+        EventBus.getDefault().post(new RemoveCellEvent(coordinates));
     }
 
     @Subscribe
     public void onAnimationEnd(AnimationEndEvent animationEndEvent){
         String msg = animationEndEvent.getMessage();
         if(msg.equals("end swap")){
-            List<Coordinate> coordinates = new ArrayList<>();
-            for(Cell cell: destroy()){
-                coordinates.add(cell.getCoordinate());
-            }
-            EventBus.getDefault().post(new RemoveCellEvent(coordinates));
+            cellRemovalProcess();
         }else if(msg.equals("end destroy")){
             //start collaspsing
-            EventBus.getDefault().post(new AnimateCellEvent(collapse()));
+            EventBus.getDefault().post(new AnimateCellEvent(collapse(), "collapse"));
+        }else if(msg.equals("end collapse")){
+            //check whether there are still some cell left to destroy after collapse
+            if(isDestroyable()){
+                cellRemovalProcess();
+            }else{
+                //tell front that we can now accept input again
+            }
         }
     }
 }

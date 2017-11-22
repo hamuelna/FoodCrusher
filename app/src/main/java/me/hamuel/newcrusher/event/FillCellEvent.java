@@ -3,6 +3,7 @@ package me.hamuel.newcrusher.event;
 import android.content.res.Resources;
 import android.graphics.*;
 import me.hamuel.newcrusher.R;
+import me.hamuel.newcrusher.model.AnimatableRectF;
 import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellView;
 import me.hamuel.newcrusher.model.Coordinate;
@@ -57,7 +58,7 @@ public class FillCellEvent {
             }
         }
         return new CellView(
-                new RectF(cord.getLeft(), cord.getTop(), cord.getRight(), cord.getBottom()),
+                new AnimatableRectF(cord.getLeft(), cord.getTop(), cord.getRight(), cord.getBottom()),
                 paint,
                 type);
     }
