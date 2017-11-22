@@ -12,9 +12,9 @@ import java.util.List;
 public class Board {
     private Cell[][] board;
     private int dim;
-    public final int VERTICAL_OFFSET = 40;
+    public final int VERTICAL_OFFSET = 100;
     public final int HORIZONTAL_OFFSET = 100;
-    public final int SIDE_LENGTH = 50;
+    public final int SIDE_LENGTH = 100;
     public final int GAP = 10;
     private List<Destroyable> destroyables = new ArrayList<>();
     private List<Fallable> fallables = new ArrayList<>();
@@ -34,10 +34,13 @@ public class Board {
         swappables.addAll(Arrays.asList(
                 new DefaultSwapper()
         ));
+    }
 
+    public void initBoard() {
         InitBoard initBoard = new InitBoard();
         //send message to frontend what to initialize
-        EventBus.getDefault().post(new FillCellEvent(initBoard.fillBoard(this)));
+        List<Cell> cells = initBoard.fillBoard(this);
+        EventBus.getDefault().post(new FillCellEvent(cells));
     }
 
 

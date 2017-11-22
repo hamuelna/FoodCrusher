@@ -21,6 +21,7 @@ public class FillCellEvent {
     public List<CellView> getCellView(Resources resources) {
         List<CellView> boardView = new ArrayList<>();
         for(Cell cell: board){
+//            System.out.println(cell);
             boardView.add(cellConverter(resources, cell));
         }
         return boardView;

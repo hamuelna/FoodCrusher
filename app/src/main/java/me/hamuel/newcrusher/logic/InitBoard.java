@@ -38,6 +38,7 @@ public class InitBoard implements Creatable {
         int dim = board.getDim();
         Cell[][] board_ = board.getBoard();
         for (int i = 0; i < dim; i++) {
+            int startHorz = horz;
             for (int j = 0; j < dim; j++) {
                 board_[i][j] = new Cell(
                         i,
@@ -48,12 +49,20 @@ public class InitBoard implements Creatable {
                 cells.add(board_[i][j]);
                 horz += board.SIDE_LENGTH + board.GAP;
             }
+            horz = startHorz;
             vert+= board.SIDE_LENGTH + board.GAP;
         }
         return cells;
     }
 
     private CellType randomType(){
-        return CellType.values()[random.nextInt(CellType.values().length)];
+        //get all type except blank
+        List<CellType> types = new ArrayList<>();
+        for(CellType cellType: CellType.values()){
+            if(cellType != CellType.BLANK){
+                types.add(cellType);
+            }
+        }
+        return types.get(random.nextInt(types.size()));
     }
 }

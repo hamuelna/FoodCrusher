@@ -24,12 +24,13 @@ public class MainGame extends AppCompatActivity {
         super.onStart();
         EventBus.getDefault().register(board);
         EventBus.getDefault().register(view);
+        board.initBoard();
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        view = new GameView(getApplicationContext());
+        view = new GameView(this);
         board = new Board(8);
         setContentView(view);
 

@@ -8,6 +8,7 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 import me.hamuel.newcrusher.event.*;
+import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellPair;
 import me.hamuel.newcrusher.model.CellView;
 import me.hamuel.newcrusher.model.Coordinate;

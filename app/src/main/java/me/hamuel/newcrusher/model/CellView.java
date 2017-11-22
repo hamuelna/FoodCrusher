@@ -37,4 +37,13 @@ public class CellView {
     public void setType(Bitmap type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "CellView{" +
+                "coordinate=" + coordinate +
+                ", paint=" + paint +
+                ", type=" + type +
+                '}';
+    }
 }
