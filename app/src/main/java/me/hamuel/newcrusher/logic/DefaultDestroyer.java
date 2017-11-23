@@ -1,5 +1,6 @@
 package me.hamuel.newcrusher.logic;
 
+import android.util.Log;
 import me.hamuel.newcrusher.model.Board;
 import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellType;
@@ -15,18 +16,26 @@ public class DefaultDestroyer implements Destroyable {
     @Override
     public Set<Cell> destroy(Board board) {
         Cell[][] currentBoard = board.getBoard();
-        Set<Cell> combineNeedToBeDestroy = scanHorizontal(currentBoard);
-        combineNeedToBeDestroy.addAll(scanVertical(currentBoard));
+        Set<Cell> combineNeedToBeDestroy = markDestroyCell(board);
         //actually remove the cell in the board by setting it to blank
-        for(Cell destroyCell: combineNeedToBeDestroy){
+        for(Cell destroyCell: markDestroyCell(board)){
             currentBoard[destroyCell.getRow()][destroyCell.getCol()].setType(CellType.BLANK);
         }
         return combineNeedToBeDestroy;
     }
 
+    public Set<Cell> markDestroyCell(Board board){
+        Cell[][] currentBoard = board.getBoard();
+        Set<Cell> combineNeedToBeDestroy = scanHorizontal(currentBoard);
+        combineNeedToBeDestroy.addAll(scanVertical(currentBoard));
+//        Log.d("all mark cell", combineNeedToBeDestroy.toString());
+        return combineNeedToBeDestroy;
+
+    }
+
     @Override
     public boolean isDestroyable(Board board) {
-        return destroy(board).size() > 0;
+        return markDestroyCell(board).size() > 0;
     }
 
     @SuppressWarnings("Duplicates")
@@ -39,18 +48,22 @@ public class DefaultDestroyer implements Destroyable {
                 Cell currentIteratingCell = board[irow][icol];
                 if (currentCell == null) {
                     currentCell = currentIteratingCell;
-                    rowKeeper.add(currentIteratingCell);
                 }else if(currentCell.getType() == currentIteratingCell.getType()){
                     rowKeeper.add(currentIteratingCell);
+                    rowKeeper.add(currentCell);
                 }else{
+                    currentCell = currentIteratingCell;
                     if(rowKeeper.size() >= MINIMUM_CONSECUTIVE_CELL){
                         needToBeDestroy.addAll(rowKeeper);
+                        currentCell = null;
                     }
                     rowKeeper.clear();
-                    rowKeeper.add(currentIteratingCell);
                 }
             }
             //reset the keeper when moving to the next row
+            if (rowKeeper.size() >= MINIMUM_CONSECUTIVE_CELL){
+                needToBeDestroy.addAll(rowKeeper);
+            }
             rowKeeper.clear();
             currentCell = null;
         }
@@ -67,18 +80,21 @@ public class DefaultDestroyer implements Destroyable {
                 Cell currentIteratingCell = board[irow][icol];
                 if (currentCell == null) {
                     currentCell = currentIteratingCell;
-                    colKeeper.add(currentIteratingCell);
                 }else if(currentCell.getType() == currentIteratingCell.getType()){
                     colKeeper.add(currentIteratingCell);
+                    colKeeper.add(currentCell);
                 }else{
+                    currentCell = currentIteratingCell;
                     if(colKeeper.size() >= MINIMUM_CONSECUTIVE_CELL){
                         needToBeDestroy.addAll(colKeeper);
                     }
                     colKeeper.clear();
-                    colKeeper.add(currentIteratingCell);
                 }
             }
             //reset the keeper when moving to the next column
+            if (colKeeper.size() >= MINIMUM_CONSECUTIVE_CELL){
+                needToBeDestroy.addAll(colKeeper);
+            }
             colKeeper.clear();
             currentCell = null;
         }

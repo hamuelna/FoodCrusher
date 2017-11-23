@@ -33,27 +33,32 @@ public class FillCellEvent {
         Bitmap type = null;
         switch (cell.getType()){
             case CAKE: {
-                paint = new Paint(Color.DKGRAY);
+                paint = new Paint();
+                paint.setColor(Color.GRAY);
                 type = BitmapFactory.decodeResource(resources, R.drawable.cakeslice);
                 break;
             }
             case APPLE: {
-                paint = new Paint(Color.RED);
+                paint = new Paint();
+                paint.setColor(Color.RED);
                 type = BitmapFactory.decodeResource(resources, R.drawable.apple);
                 break;
             }
             case DRINK: {
-                paint = new Paint(Color.BLUE);
+                paint = new Paint();
+                paint.setColor(Color.CYAN);
                 type = BitmapFactory.decodeResource(resources, R.drawable.drink);
                 break;
             }
             case PIZZA: {
-                paint = new Paint(Color.MAGENTA);
+                paint = new Paint();
+                paint.setColor(Color.MAGENTA);
                 type = BitmapFactory.decodeResource(resources, R.drawable.pizza);
                 break;
             }
             case BURGER: {
-                paint = new Paint(Color.YELLOW);
+                paint = new Paint();
+                paint.setColor(Color.YELLOW);
                 type = BitmapFactory.decodeResource(resources, R.drawable.burger);
                 break;
             }

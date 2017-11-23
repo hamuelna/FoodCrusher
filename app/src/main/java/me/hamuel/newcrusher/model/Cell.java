@@ -50,14 +50,14 @@ public class Cell {
 
         if (row != cell.row) return false;
         if (col != cell.col) return false;
-        return type == cell.type;
+        return coordinate != null ? coordinate.equals(cell.coordinate) : cell.coordinate == null;
     }
 
     @Override
     public int hashCode() {
         int result = row;
         result = 31 * result + col;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (coordinate != null ? coordinate.hashCode() : 0);
         return result;
     }
 
