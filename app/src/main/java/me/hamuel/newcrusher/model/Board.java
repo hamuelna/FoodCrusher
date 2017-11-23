@@ -115,7 +115,10 @@ public class Board {
     public void onMoveCellEvent(MoveCellEvent moveCellEvent){
         Cell a = findCell(moveCellEvent.getCellA());
         Cell b = findCell(moveCellEvent.getCellB());
+        System.out.println("event is sent to start the swap");
+        System.out.println(a + " " + b);
         if(isSwappable(a, b)){
+            System.out.println("it is swappable");
             EventBus.getDefault().post(new AnimateCellEvent(swap(a,b), "swap"));
         }
 

@@ -87,9 +87,10 @@ public class GameView extends View{
     @Subscribe
     public void onAnimateEvent(final AnimateCellEvent animateCellEvent){
         List<Animator> animations = new ArrayList<>();
+        System.out.println("starting backend send command animation");
+        System.out.println(animateCellEvent.getCellMoves());
         for(CellPair cellPair: animateCellEvent.getCellMoves()){
             CellView from = findCellView(cellPair.getFrom().getCoordinate());
-            RectF fromCoordinate = from.getCoordinate();
             Coordinate toCoordinate = cellPair.getTo().getCoordinate();
             ObjectAnimator animateLeft = ObjectAnimator.ofFloat(from.getCoordinate(), "left",from.getCoordinate().left, toCoordinate.getLeft());
             ObjectAnimator animateRight = ObjectAnimator.ofFloat(from.getCoordinate(), "right", from.getCoordinate().right, toCoordinate.getRight());
@@ -98,25 +99,25 @@ public class GameView extends View{
             animateLeft.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    postInvalidate();
+                    invalidate();
                 }
             });
             animateRight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    postInvalidate();
+                    invalidate();
                 }
             });
             animateTop.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    postInvalidate();
+                    invalidate();
                 }
             });
             animateBottom.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    postInvalidate();
+                    invalidate();
                 }
             });
             animations.add(animateLeft);
@@ -139,7 +140,7 @@ public class GameView extends View{
                 }
             }
         });
-
+        animatorSet.start();
     }
 
     @Subscribe

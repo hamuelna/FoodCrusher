@@ -29,8 +29,8 @@ public class DefaultSwapper implements Swappable {
             logicSwap(a,b, currentBoard);
             return null;
         }
-        a_.setTo(a);
-        b_.setTo(b);
+        a_.setTo(b);
+        b_.setTo(a);
         cellPairs.add(a_);
         cellPairs.add(b_);
         return cellPairs;

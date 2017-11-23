@@ -24,4 +24,12 @@ public class CellPair {
     public void setTo(Cell to) {
         this.to = to;
     }
+
+    @Override
+    public String toString() {
+        return "CellPair{" +
+                "from=" + from +
+                ", to=" + to +
+                '}';
+    }
 }
