@@ -1,7 +1,9 @@
 package me.hamuel.newcrusher.model;
 
+import android.util.Log;
 import me.hamuel.newcrusher.event.*;
 import me.hamuel.newcrusher.logic.*;
+import me.hamuel.newcrusher.utils.BoardUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -48,14 +50,19 @@ public class Board {
         return board;
     }
 
+    public void setBoard(Cell[][] board) {
+        this.board = board;
+    }
+
     public List<CellPair> swap(Cell a, Cell b){
-        List<CellPair> movedPostion = new ArrayList<>();
+        List<CellPair> movedPosition = new ArrayList<>();
         for(Swappable swapper: swappables){
             if (swapper.isSwappable(a,b,this)){
-                movedPostion.addAll(swapper.swap(a,b,this));
+                movedPosition.addAll(swapper.swap(a,b,this));
             }
         }
-        return movedPostion;
+        BoardUtils.printBoard(this);
+        return movedPosition;
 
     }
 
@@ -75,6 +82,7 @@ public class Board {
                 destroyedCell.addAll(destroyer.destroy(this));
             }
         }
+        Log.d("destroyedCell", destroyedCell.toString());
         return destroyedCell;
     }
 
@@ -88,11 +96,11 @@ public class Board {
     }
 
     public List<CellPair> collapse(){
-        List<CellPair> movedPostion = new ArrayList<>();
+        List<CellPair> movedPosition = new ArrayList<>();
         for(Fallable faller: fallables){
-            movedPostion.addAll(faller.collapse(this));
+            movedPosition.addAll(faller.collapse(this));
         }
-        return movedPostion;
+        return movedPosition;
     }
 
     public int getDim() {
@@ -136,6 +144,7 @@ public class Board {
     public void onAnimationEnd(AnimationEndEvent animationEndEvent){
         String msg = animationEndEvent.getMessage();
         if(msg.equals("end swap")){
+            System.out.println("start removing cell");
             cellRemovalProcess();
         }else if(msg.equals("end destroy")){
             //start collaspsing

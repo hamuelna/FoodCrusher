@@ -41,6 +41,10 @@ public class Cell {
         return coordinate;
     }
 
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

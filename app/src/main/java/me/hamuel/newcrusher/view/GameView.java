@@ -134,6 +134,7 @@ public class GameView extends View{
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 if(animateCellEvent.getEventName().equals("swap")){
+                    System.out.println("finish swap tell the backend that the event have ended");
                     EventBus.getDefault().post(new AnimationEndEvent("end swap"));
                 }else{
                     EventBus.getDefault().post(new AnimationEndEvent("end collapse"));
@@ -145,7 +146,9 @@ public class GameView extends View{
 
     @Subscribe
     public void onRemoveEvent(RemoveCellEvent removeCellEvent){
+        System.out.println("back notify the front to remove below are remove cells");
         for(Coordinate coordinate: removeCellEvent.getCellToBeRemove()){
+            System.out.println(coordinate);
             CellView toBeRemove = null;
             for(CellView cellView: boardView){
                 if(coordinate.equalRectF(cellView.getCoordinate())){
@@ -154,6 +157,7 @@ public class GameView extends View{
             }
             boardView.remove(toBeRemove);
         }
+        invalidate();
 
     }
 }

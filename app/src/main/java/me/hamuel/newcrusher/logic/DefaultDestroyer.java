@@ -4,6 +4,7 @@ import android.util.Log;
 import me.hamuel.newcrusher.model.Board;
 import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellType;
+import me.hamuel.newcrusher.utils.BoardUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,19 +17,20 @@ public class DefaultDestroyer implements Destroyable {
     @Override
     public Set<Cell> destroy(Board board) {
         Cell[][] currentBoard = board.getBoard();
-        Set<Cell> combineNeedToBeDestroy = markDestroyCell(board);
+//        BoardUtils.printBoard(board);
+        Set<Cell> markedCell = markDestroyCell(board);
         //actually remove the cell in the board by setting it to blank
-        for(Cell destroyCell: markDestroyCell(board)){
+        for(Cell destroyCell: markedCell){
             currentBoard[destroyCell.getRow()][destroyCell.getCol()].setType(CellType.BLANK);
         }
-        return combineNeedToBeDestroy;
+        return markedCell;
     }
 
     public Set<Cell> markDestroyCell(Board board){
         Cell[][] currentBoard = board.getBoard();
         Set<Cell> combineNeedToBeDestroy = scanHorizontal(currentBoard);
         combineNeedToBeDestroy.addAll(scanVertical(currentBoard));
-//        Log.d("all mark cell", combineNeedToBeDestroy.toString());
+        Log.d("all mark cell", combineNeedToBeDestroy.toString());
         return combineNeedToBeDestroy;
 
     }

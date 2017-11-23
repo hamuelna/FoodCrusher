@@ -56,4 +56,14 @@ public class Coordinate {
         result = 31 * result + (bottom != +0.0f ? Float.floatToIntBits(bottom) : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Coordinate{" +
+                "left=" + left +
+                ", top=" + top +
+                ", right=" + right +
+                ", bottom=" + bottom +
+                '}';
+    }
 }

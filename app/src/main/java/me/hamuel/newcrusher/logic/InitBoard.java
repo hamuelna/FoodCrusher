@@ -37,8 +37,8 @@ public class InitBoard implements Creatable {
             int startHorz = horz;
             for (int j = 0; j < dim; j++) {
                 board_[i][j] = new Cell(
-                        i,
                         j,
+                        i,
                         new Coordinate(horz, vert, horz + board.SIDE_LENGTH, vert + board.SIDE_LENGTH),
                         CellType.BLANK
                 );
@@ -55,8 +55,8 @@ public class InitBoard implements Creatable {
             int startHorz = horz;
             for (int j = 0; j < dim; j++) {
                 board_[i][j] = new Cell(
-                        i,
                         j,
+                        i,
                         new Coordinate(horz, vert, horz + board.SIDE_LENGTH, vert + board.SIDE_LENGTH),
                         randomType(board, i, j)
                 );
