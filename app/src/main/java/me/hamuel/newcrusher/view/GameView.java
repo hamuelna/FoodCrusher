@@ -8,7 +8,6 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 import me.hamuel.newcrusher.event.*;
-import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellPair;
 import me.hamuel.newcrusher.model.CellView;
 import me.hamuel.newcrusher.model.Coordinate;
@@ -24,7 +23,8 @@ public class GameView extends View{
         super(context);
     }
     List<CellView> boardView;
-    private Coordinate firstCell;
+    private Coordinate firstCellCoordinate;
+    private CellView firstCell;
     private boolean isClickOnce = false;
     private boolean isProcessing = false;
 
@@ -35,6 +35,7 @@ public class GameView extends View{
         if(boardView != null){
             for(CellView cellView: boardView){
                 canvas.drawRect(cellView.getCoordinate(), cellView.getPaint());
+                canvas.drawRect(cellView.getCoordinate(), cellView.getBorderPaint());
                 canvas.drawBitmap(cellView.getType(),null,cellView.getCoordinate(), null);
             }
         }
@@ -45,15 +46,21 @@ public class GameView extends View{
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             for (CellView cellView: boardView){
                 if(cellView.getCoordinate().contains(event.getX(), event.getY())){
+                    System.out.println("You have click on a cell");
                     if(!isClickOnce){
                         RectF c = cellView.getCoordinate();
-                        firstCell = new Coordinate(c.left, c.top, c.right, c.bottom);
+                        firstCellCoordinate = new Coordinate(c.left, c.top, c.right, c.bottom);
+                        firstCell = cellView;
+                        cellView.click();
+                        invalidate();
                         isClickOnce = true;
                     }else{
                         RectF c = cellView.getCoordinate();
                         Coordinate secondCell = new Coordinate(c.left, c.top, c.right, c.bottom);
                         isClickOnce = false;
-                        EventBus.getDefault().post(new MoveCellEvent(firstCell, secondCell));
+                        firstCell.unClick();
+                        invalidate();
+                        EventBus.getDefault().post(new MoveCellEvent(firstCellCoordinate, secondCell));
                     }
                 }
             }
