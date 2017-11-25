@@ -11,7 +11,7 @@ public interface Creatable {
 
     /**
      * Fill the board according to our strategy for example can
-     * be use to initialize the board or fill in the empty Cell with a proper cell
+     * be use to initialize the board or refill in the empty Cell with a proper cell
      * @param board
      */
     List<Cell> fillBoard(Board board);

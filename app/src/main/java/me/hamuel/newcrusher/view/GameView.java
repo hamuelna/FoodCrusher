@@ -8,6 +8,7 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 import me.hamuel.newcrusher.event.*;
+import me.hamuel.newcrusher.factory.MyAnimatorUtils;
 import me.hamuel.newcrusher.model.CellPair;
 import me.hamuel.newcrusher.model.CellView;
 import me.hamuel.newcrusher.model.Coordinate;
@@ -51,14 +52,14 @@ public class GameView extends View{
                         firstCellCoordinate = new Coordinate(c.left, c.top, c.right, c.bottom);
                         firstCell = cellView;
                         cellView.click();
-                        invalidate();
+                        postInvalidate();
                         isClickOnce = true;
                     }else{
                         RectF c = cellView.getCoordinate();
                         Coordinate secondCell = new Coordinate(c.left, c.top, c.right, c.bottom);
                         isClickOnce = false;
                         firstCell.unClick();
-                        invalidate();
+                        postInvalidate();
                         EventBus.getDefault().post(new MoveCellEvent(firstCellCoordinate, secondCell));
                     }
                 }
@@ -74,62 +75,11 @@ public class GameView extends View{
         invalidate();
     }
 
-    private CellView findCellView(Coordinate coordinate){
-        for(CellView cellView: boardView){
-            if(coordinate.equalRectF(cellView.getCoordinate())){
-                return cellView;
-            }
-        }
-        return null;
-    }
+
 
     @Subscribe
     public void onAnimateEvent(final AnimateCellEvent animateCellEvent){
-        List<Animator> animations = new ArrayList<>();
-        System.out.println("starting backend send command animation");
-        System.out.println(animateCellEvent.getCellMoves());
-        for(CellPair cellPair: animateCellEvent.getCellMoves()){
-            CellView from = findCellView(cellPair.getFrom().getCoordinate());
-            if(from != null){
-                Coordinate toCoordinate = cellPair.getTo().getCoordinate();
-                ObjectAnimator animateLeft = ObjectAnimator.ofFloat(from.getCoordinate(), "left",from.getCoordinate().left, toCoordinate.getLeft());
-                ObjectAnimator animateRight = ObjectAnimator.ofFloat(from.getCoordinate(), "right", from.getCoordinate().right, toCoordinate.getRight());
-                ObjectAnimator animateTop = ObjectAnimator.ofFloat(from.getCoordinate(), "top", from.getCoordinate().top, toCoordinate.getTop());
-                ObjectAnimator animateBottom = ObjectAnimator.ofFloat(from.getCoordinate(), "bottom", from.getCoordinate().bottom, toCoordinate.getBottom());
-                animateLeft.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        postInvalidate();
-                    }
-                });
-                animateRight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        postInvalidate();
-                    }
-                });
-                animateTop.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        postInvalidate();
-                    }
-                });
-                animateBottom.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        postInvalidate();
-                    }
-                });
-                animations.add(animateLeft);
-                animations.add(animateRight);
-                animations.add(animateTop);
-                animations.add(animateBottom);
-            }
-        }
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(animations);
-        animatorSet.setDuration(500);
+        AnimatorSet animatorSet = MyAnimatorUtils.animateRect(this, animateCellEvent.getCellMoves(), boardView);
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -161,5 +111,20 @@ public class GameView extends View{
         }
         invalidate();
         EventBus.getDefault().post(new AnimationEndEvent("end destroy"));
+    }
+
+    @Subscribe
+    public void onPartialFillCellEvent(PartialFillCellEvent partialFillCellEvent){
+        System.out.println("onPartialFill was call");
+        boardView.addAll(partialFillCellEvent.getNewCells(getResources()));
+        AnimatorSet animatorSet = MyAnimatorUtils.animateRect(this, partialFillCellEvent.getAnimatedCells(), boardView);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                EventBus.getDefault().post(new AnimationEndEvent("end refill"));
+            }
+        });
+        animatorSet.start();
     }
 }

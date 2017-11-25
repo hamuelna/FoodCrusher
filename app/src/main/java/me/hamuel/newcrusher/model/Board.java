@@ -17,9 +17,11 @@ public class Board {
     public final int HORIZONTAL_OFFSET = 100;
     public final int SIDE_LENGTH = 100;
     public final int GAP = 10;
+    public final int FILL_ANIMATE_OFFSET = 1000;
     private List<Destroyable> destroyables = new ArrayList<>();
     private List<Fallable> fallables = new ArrayList<>();
     private List<Swappable> swappables = new ArrayList<>();
+    private List<Creatable> creatables = new ArrayList<>();
 
     public Board(int dim) {
         this.dim = dim;
@@ -34,6 +36,9 @@ public class Board {
         );
         swappables.addAll(Arrays.asList(
                 new DefaultSwapper(destroyables)
+        ));
+        creatables.addAll(Arrays.asList(
+                new NormalFiller()
         ));
     }
 
@@ -60,7 +65,6 @@ public class Board {
                 movedPosition.addAll(swapper.swap(a,b,this));
             }
         }
-        BoardUtils.printBoard(this);
         return movedPosition;
 
     }
@@ -93,6 +97,30 @@ public class Board {
         return false;
     }
 
+    //refill the damn board after some cell are destroy
+    public void refill(){
+        System.out.println("before refill");
+        BoardUtils.printBoard(board);
+        List<Cell> cellsToBeFill = new ArrayList<>();
+        for (Creatable creatable: creatables){
+            cellsToBeFill.addAll(creatable.fillBoard(this));
+        }
+        List<CellPair> cellsToBeAnimated = new ArrayList<>();
+        List<Cell> cellsBeforeAnimated = new ArrayList<>();
+        for (Cell cell: cellsToBeFill){
+            Cell beforeFall = cell.clone();
+            Coordinate c = beforeFall.getCoordinate();
+            beforeFall.setCoordinate(new Coordinate(c.getLeft(), c.getTop() - FILL_ANIMATE_OFFSET, c.getRight(), c.getBottom() - FILL_ANIMATE_OFFSET));
+            cellsBeforeAnimated.add(beforeFall);
+            cellsToBeAnimated.add(new CellPair(
+                    beforeFall,
+                    cell
+            ));
+        }
+
+        EventBus.getDefault().post(new PartialFillCellEvent(cellsToBeAnimated, cellsBeforeAnimated));
+    }
+
     public List<CellPair> collapse(){
         List<CellPair> movedPosition = new ArrayList<>();
         for(Fallable faller: fallables){
@@ -113,7 +141,6 @@ public class Board {
                 }
             }
         }
-        System.out.println("Unable to find cell");
         return null;
     }
 
@@ -121,10 +148,7 @@ public class Board {
     public void onMoveCellEvent(MoveCellEvent moveCellEvent){
         Cell a = findCell(moveCellEvent.getCellA());
         Cell b = findCell(moveCellEvent.getCellB());
-        System.out.println("event is sent to start the swap");
-        System.out.println(a + " " + b);
         if(isSwappable(a, b)){
-            System.out.println("it is swappable");
             EventBus.getDefault().post(new AnimateCellEvent(swap(a,b), "swap"));
         }
 
@@ -142,18 +166,22 @@ public class Board {
     public void onAnimationEnd(AnimationEndEvent animationEndEvent){
         String msg = animationEndEvent.getMessage();
         if(msg.equals("end swap")){
-            System.out.println("start removing cell");
             cellRemovalProcess();
         }else if(msg.equals("end destroy")){
             //start collaspsing
             EventBus.getDefault().post(new AnimateCellEvent(collapse(), "collapse"));
+            System.out.println("after collapse");
+            BoardUtils.printBoard(board);
+            System.out.println("====");
         }else if(msg.equals("end collapse")){
-            //check whether there are still some cell left to destroy after collapse
-//            if(isDestroyable()){
-//                cellRemovalProcess();
-//            }else{
-//                //tell front that we can now accept input again
-//            }
+            System.out.println("trigger end collapse");
+            refill();
+        }else if(msg.equals("end refill")){
+            if(isDestroyable()){
+                cellRemovalProcess();
+            }else{
+                //tell front that we can now accept input again
+            }
         }
     }
 }

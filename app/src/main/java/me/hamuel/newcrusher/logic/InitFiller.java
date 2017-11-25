@@ -9,7 +9,7 @@ import me.hamuel.newcrusher.model.Coordinate;
 import java.util.*;
 
 /**
- * Fill the board initially, the board fill initially will not have any
+ * Fill the board initially, the board refill initially will not have any
  * n consecutive cell when the board is initialize hence the initialize
  * board is not destroyable initially
  */

@@ -34,7 +34,6 @@ public class DefaultDestroyer implements Destroyable {
         Cell[][] currentBoard = board.getBoard();
         Set<Cell> combineNeedToBeDestroy = scanHorizontal(currentBoard);
         combineNeedToBeDestroy.addAll(scanVertical(currentBoard));
-        Log.d("all mark cell", combineNeedToBeDestroy.toString());
         return combineNeedToBeDestroy;
 
     }

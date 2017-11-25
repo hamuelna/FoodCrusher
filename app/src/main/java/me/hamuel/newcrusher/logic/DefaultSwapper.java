@@ -22,7 +22,6 @@ public class DefaultSwapper implements Swappable {
         //check if we can swap or not and swap it back even though it
         //is swappable
         logicSwap(a,b, board.getBoard());
-        BoardUtils.printBoard(board);
         for (Destroyable destroyable: destroyer){
             if (destroyable.isDestroyable(board)){
                 logicSwap(a,b, board.getBoard());

@@ -22,4 +22,13 @@ public class BoardUtils {
             System.out.println();
         }
     }
+
+    public static void printVertical(Cell[][] board){
+        for(Cell[] row: board){
+            for(Cell cell: row){
+                System.out.printf(cell.getCoordinate().getTop() + " ");
+            }
+            System.out.println();
+        }
+    }
 }

@@ -4,6 +4,7 @@ import me.hamuel.newcrusher.model.Board;
 import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellPair;
 import me.hamuel.newcrusher.model.CellType;
+import me.hamuel.newcrusher.utils.BoardUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,6 @@ public class DefaultFaller implements Fallable {
         for (int i = 0; i < board.getDim(); i++) {
             cellPairs.addAll(logicalCollapse(currentBoard, i));
         }
-        System.out.println(cellPairs);
         return cellPairs;
     }
 
@@ -27,7 +27,6 @@ public class DefaultFaller implements Fallable {
         for (int irow = 0; irow < board.length; irow++) {
             line[irow] = board[irow][icol];
         }
-        System.out.println(Arrays.toString(line));
         return line;
     }
 
@@ -61,6 +60,10 @@ public class DefaultFaller implements Fallable {
                 to.setType(from.getType());
                 collapseLine[irow] = to;
             }
+        }
+
+        for (int row = 0; row < collapseLine.length; row++) {
+            board[row][icol] = collapseLine[row];
         }
 
         return cellPairs;
