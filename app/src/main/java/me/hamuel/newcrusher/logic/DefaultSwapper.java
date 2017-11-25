@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultSwapper implements Swappable {
-    private int MINIMUM_CONSECUTIVE_CELL = 3;
     private List<Destroyable> destroyer;
 
     public DefaultSwapper(List<Destroyable> destroyer) {

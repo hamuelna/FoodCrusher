@@ -21,7 +21,6 @@ public class DefaultDestroyer implements Destroyable {
     @Override
     public Set<Cell> destroy(Board board) {
         Cell[][] currentBoard = board.getBoard();
-//        BoardUtils.printBoard(board);
         Set<Cell> markedCell = markDestroyCell(board);
         //actually remove the cell in the board by setting it to blank
         for(Cell destroyCell: markedCell){

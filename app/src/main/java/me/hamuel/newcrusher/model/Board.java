@@ -171,8 +171,6 @@ public class Board {
             //start collaspsing
             EventBus.getDefault().post(new AnimateCellEvent(collapse(), "collapse"));
             System.out.println("after collapse");
-            BoardUtils.printBoard(board);
-            System.out.println("====");
         }else if(msg.equals("end collapse")){
             System.out.println("trigger end collapse");
             refill();
@@ -181,6 +179,7 @@ public class Board {
                 cellRemovalProcess();
             }else{
                 //tell front that we can now accept input again
+                EventBus.getDefault().post(new ToggleBlockingEvent());
             }
         }
     }

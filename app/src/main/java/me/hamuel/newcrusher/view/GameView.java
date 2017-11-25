@@ -44,7 +44,7 @@ public class GameView extends View{
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN){
+        if(event.getAction() == MotionEvent.ACTION_DOWN && !isProcessing){
             for (CellView cellView: boardView){
                 if(cellView.getCoordinate().contains(event.getX(), event.getY())){
                     if(!isClickOnce){
@@ -60,6 +60,7 @@ public class GameView extends View{
                         isClickOnce = false;
                         firstCell.unClick();
                         postInvalidate();
+                        isProcessing = true;
                         EventBus.getDefault().post(new MoveCellEvent(firstCellCoordinate, secondCell));
                     }
                 }
@@ -93,6 +94,7 @@ public class GameView extends View{
             }
         });
         animatorSet.start();
+        animatorSet.setDuration(500);
     }
 
     @Subscribe
@@ -125,6 +127,12 @@ public class GameView extends View{
                 EventBus.getDefault().post(new AnimationEndEvent("end refill"));
             }
         });
+        animatorSet.setDuration(1000);
         animatorSet.start();
+    }
+
+    @Subscribe
+    public void onUnblockingEvent(ToggleBlockingEvent toggleBlockingEvent){
+        isProcessing = false;
     }
 }

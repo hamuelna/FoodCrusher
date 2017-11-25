@@ -56,7 +56,6 @@ public class MyAnimatorUtils {
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(animations);
-        animatorSet.setDuration(500);
         return animatorSet;
     }
 
