@@ -11,6 +11,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * mark and destroy consecutive cell however can only be call if there is no blank cell
+ * in the board otherwise there will be bug for sure (it will keep destroying non stop)
+ */
 public class DefaultDestroyer implements Destroyable {
     private int MINIMUM_CONSECUTIVE_CELL = 3;
 

@@ -8,9 +8,14 @@ import me.hamuel.newcrusher.model.Coordinate;
 
 import java.util.*;
 
-public class InitBoard implements Creatable {
+/**
+ * Fill the board initially, the board fill initially will not have any
+ * n consecutive cell when the board is initialize hence the initialize
+ * board is not destroyable initially
+ */
+public class InitFiller implements Creatable {
     private Random random;
-    public InitBoard() {
+    public InitFiller() {
 
         random = new Random();
     }
@@ -37,8 +42,8 @@ public class InitBoard implements Creatable {
             int startHorz = horz;
             for (int j = 0; j < dim; j++) {
                 board_[i][j] = new Cell(
-                        j,
                         i,
+                        j,
                         new Coordinate(horz, vert, horz + board.SIDE_LENGTH, vert + board.SIDE_LENGTH),
                         CellType.BLANK
                 );
@@ -55,8 +60,8 @@ public class InitBoard implements Creatable {
             int startHorz = horz;
             for (int j = 0; j < dim; j++) {
                 board_[i][j] = new Cell(
-                        j,
                         i,
+                        j,
                         new Coordinate(horz, vert, horz + board.SIDE_LENGTH, vert + board.SIDE_LENGTH),
                         randomType(board, i, j)
                 );
@@ -66,6 +71,7 @@ public class InitBoard implements Creatable {
             horz = startHorz;
             vert+= board.SIDE_LENGTH + board.GAP;
         }
+
         return cells;
     }
 

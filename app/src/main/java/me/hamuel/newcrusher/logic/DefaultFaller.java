@@ -6,6 +6,7 @@ import me.hamuel.newcrusher.model.CellPair;
 import me.hamuel.newcrusher.model.CellType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +14,12 @@ public class DefaultFaller implements Fallable {
     @Override
     public List<CellPair> collapse(Board board) {
         Cell[][] currentBoard = board.getBoard();
-        return null;
+        List<CellPair> cellPairs = new ArrayList<>();
+        for (int i = 0; i < board.getDim(); i++) {
+            cellPairs.addAll(logicalCollapse(currentBoard, i));
+        }
+        System.out.println(cellPairs);
+        return cellPairs;
     }
 
     private Cell[] getVertical(Cell[][] board, int icol){
@@ -21,12 +27,13 @@ public class DefaultFaller implements Fallable {
         for (int irow = 0; irow < board.length; irow++) {
             line[irow] = board[irow][icol];
         }
+        System.out.println(Arrays.toString(line));
         return line;
     }
 
     //return a cell pair that need switching only
 
-    private List<CellPair> logicalCollaspe(Cell[][] board, int icol){
+    private List<CellPair> logicalCollapse(Cell[][] board, int icol){
         LinkedList<Cell> blankCells = new LinkedList<>();
         LinkedList<Cell> activeCells = new LinkedList<>();
         Cell[] originalLine = getVertical(board, icol);

@@ -46,7 +46,6 @@ public class GameView extends View{
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             for (CellView cellView: boardView){
                 if(cellView.getCoordinate().contains(event.getX(), event.getY())){
-                    System.out.println("You have click on a cell");
                     if(!isClickOnce){
                         RectF c = cellView.getCoordinate();
                         firstCellCoordinate = new Coordinate(c.left, c.top, c.right, c.bottom);
@@ -91,39 +90,41 @@ public class GameView extends View{
         System.out.println(animateCellEvent.getCellMoves());
         for(CellPair cellPair: animateCellEvent.getCellMoves()){
             CellView from = findCellView(cellPair.getFrom().getCoordinate());
-            Coordinate toCoordinate = cellPair.getTo().getCoordinate();
-            ObjectAnimator animateLeft = ObjectAnimator.ofFloat(from.getCoordinate(), "left",from.getCoordinate().left, toCoordinate.getLeft());
-            ObjectAnimator animateRight = ObjectAnimator.ofFloat(from.getCoordinate(), "right", from.getCoordinate().right, toCoordinate.getRight());
-            ObjectAnimator animateTop = ObjectAnimator.ofFloat(from.getCoordinate(), "top", from.getCoordinate().top, toCoordinate.getTop());
-            ObjectAnimator animateBottom = ObjectAnimator.ofFloat(from.getCoordinate(), "bottom", from.getCoordinate().bottom, toCoordinate.getBottom());
-            animateLeft.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    invalidate();
-                }
-            });
-            animateRight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    invalidate();
-                }
-            });
-            animateTop.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    invalidate();
-                }
-            });
-            animateBottom.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    invalidate();
-                }
-            });
-            animations.add(animateLeft);
-            animations.add(animateRight);
-            animations.add(animateTop);
-            animations.add(animateBottom);
+            if(from != null){
+                Coordinate toCoordinate = cellPair.getTo().getCoordinate();
+                ObjectAnimator animateLeft = ObjectAnimator.ofFloat(from.getCoordinate(), "left",from.getCoordinate().left, toCoordinate.getLeft());
+                ObjectAnimator animateRight = ObjectAnimator.ofFloat(from.getCoordinate(), "right", from.getCoordinate().right, toCoordinate.getRight());
+                ObjectAnimator animateTop = ObjectAnimator.ofFloat(from.getCoordinate(), "top", from.getCoordinate().top, toCoordinate.getTop());
+                ObjectAnimator animateBottom = ObjectAnimator.ofFloat(from.getCoordinate(), "bottom", from.getCoordinate().bottom, toCoordinate.getBottom());
+                animateLeft.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                        postInvalidate();
+                    }
+                });
+                animateRight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                        postInvalidate();
+                    }
+                });
+                animateTop.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                        postInvalidate();
+                    }
+                });
+                animateBottom.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                        postInvalidate();
+                    }
+                });
+                animations.add(animateLeft);
+                animations.add(animateRight);
+                animations.add(animateTop);
+                animations.add(animateBottom);
+            }
         }
 
         AnimatorSet animatorSet = new AnimatorSet();
@@ -146,6 +147,7 @@ public class GameView extends View{
 
     @Subscribe
     public void onRemoveEvent(RemoveCellEvent removeCellEvent){
+        //might add animation to scale down in the future
         System.out.println("back notify the front to remove below are remove cells");
         for(Coordinate coordinate: removeCellEvent.getCellToBeRemove()){
             System.out.println(coordinate);
@@ -158,6 +160,6 @@ public class GameView extends View{
             boardView.remove(toBeRemove);
         }
         invalidate();
-
+        EventBus.getDefault().post(new AnimationEndEvent("end destroy"));
     }
 }

@@ -1,6 +1,5 @@
 package me.hamuel.newcrusher.model;
 
-import android.util.Log;
 import me.hamuel.newcrusher.event.*;
 import me.hamuel.newcrusher.logic.*;
 import me.hamuel.newcrusher.utils.BoardUtils;
@@ -34,14 +33,14 @@ public class Board {
                 )
         );
         swappables.addAll(Arrays.asList(
-                new DefaultSwapper()
+                new DefaultSwapper(destroyables)
         ));
     }
 
     public void initBoard() {
-        InitBoard initBoard = new InitBoard();
+        InitFiller initFiller = new InitFiller();
         //send message to frontend what to initialize
-        List<Cell> cells = initBoard.fillBoard(this);
+        List<Cell> cells = initFiller.fillBoard(this);
         EventBus.getDefault().post(new FillCellEvent(cells));
     }
 
@@ -82,7 +81,6 @@ public class Board {
                 destroyedCell.addAll(destroyer.destroy(this));
             }
         }
-        Log.d("destroyedCell", destroyedCell.toString());
         return destroyedCell;
     }
 
@@ -151,11 +149,11 @@ public class Board {
             EventBus.getDefault().post(new AnimateCellEvent(collapse(), "collapse"));
         }else if(msg.equals("end collapse")){
             //check whether there are still some cell left to destroy after collapse
-            if(isDestroyable()){
-                cellRemovalProcess();
-            }else{
-                //tell front that we can now accept input again
-            }
+//            if(isDestroyable()){
+//                cellRemovalProcess();
+//            }else{
+//                //tell front that we can now accept input again
+//            }
         }
     }
 }
