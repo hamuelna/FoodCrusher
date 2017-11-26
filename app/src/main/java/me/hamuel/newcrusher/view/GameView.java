@@ -9,14 +9,13 @@ import android.support.v4.app.DialogFragment;
 import android.view.MotionEvent;
 import android.view.View;
 import me.hamuel.newcrusher.event.*;
-import me.hamuel.newcrusher.factory.MyAnimatorUtils;
-import me.hamuel.newcrusher.model.CellPair;
+import me.hamuel.newcrusher.factory.DefaultAnimator;
+import me.hamuel.newcrusher.factory.IAnimator;
 import me.hamuel.newcrusher.model.CellView;
 import me.hamuel.newcrusher.model.Coordinate;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameView extends View{
@@ -29,7 +28,7 @@ public class GameView extends View{
     private CellView firstCell;
     private boolean isClickOnce = false;
     private boolean isProcessing = false;
-
+    private IAnimator animator;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -74,6 +73,7 @@ public class GameView extends View{
     @Subscribe
     public void onFillEvent(FillCellEvent fillCellEvent){
         boardView = fillCellEvent.getCellView(getResources());
+        animator = new DefaultAnimator(boardView, this);
         invalidate();
     }
 
@@ -81,7 +81,7 @@ public class GameView extends View{
 
     @Subscribe
     public void onAnimateEvent(final AnimateCellEvent animateCellEvent){
-        AnimatorSet animatorSet = MyAnimatorUtils.animateRect(this, animateCellEvent.getCellMoves(), boardView);
+        AnimatorSet animatorSet = animator.animateRectTranslation(animateCellEvent.getCellMoves());
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -99,28 +99,34 @@ public class GameView extends View{
     }
 
     @Subscribe
-    public void onRemoveEvent(RemoveCellEvent removeCellEvent){
-        //might add animation to scale down in the future
-        System.out.println("back notify the front to remove below are remove cells");
-        for(Coordinate coordinate: removeCellEvent.getCellToBeRemove()){
-            System.out.println(coordinate);
-            CellView toBeRemove = null;
-            for(CellView cellView: boardView){
-                if(coordinate.equalRectF(cellView.getCoordinate())){
-                    toBeRemove = cellView;
+    public void onRemoveEvent(final RemoveCellEvent removeCellEvent){
+        //add animation to scale down
+        AnimatorSet animatorSet = animator.animateRectScale(removeCellEvent.getCellToBeRemove());
+        animatorSet.setDuration(500);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                for(Coordinate coordinate: removeCellEvent.getCellToBeRemove()){
+                    CellView toBeRemove = null;
+                    for(CellView cellView: boardView){
+                        if(coordinate.equalRectF(cellView.getCoordinate())){
+                            toBeRemove = cellView;
+                        }
+                    }
+                    boardView.remove(toBeRemove);
                 }
+                postInvalidate();
+                EventBus.getDefault().post(new AnimationEndEvent("end destroy"));
             }
-            boardView.remove(toBeRemove);
-        }
-        invalidate();
-        EventBus.getDefault().post(new AnimationEndEvent("end destroy"));
+        });
+        animatorSet.start();
     }
 
     @Subscribe
     public void onPartialFillCellEvent(PartialFillCellEvent partialFillCellEvent){
         System.out.println("onPartialFill was call");
         boardView.addAll(partialFillCellEvent.getNewCells(getResources()));
-        AnimatorSet animatorSet = MyAnimatorUtils.animateRect(this, partialFillCellEvent.getAnimatedCells(), boardView);
+        AnimatorSet animatorSet = animator.animateRectTranslation(partialFillCellEvent.getAnimatedCells());
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
