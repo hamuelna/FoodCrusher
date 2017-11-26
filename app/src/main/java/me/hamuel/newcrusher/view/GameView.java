@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.RectF;
+import android.support.v4.app.DialogFragment;
 import android.view.MotionEvent;
 import android.view.View;
 import me.hamuel.newcrusher.event.*;
@@ -135,4 +136,12 @@ public class GameView extends View{
     public void onUnblockingEvent(ToggleBlockingEvent toggleBlockingEvent){
         isProcessing = false;
     }
+
+    @Subscribe
+    public void onGameOverEvent(GameOverEvent gameOverEvent){
+        DialogFragment dialogFragment = new GameOverDialog();
+        dialogFragment.show(dialogFragment.getFragmentManager(), "gameOver");
+        isProcessing = true;
+    }
+
 }

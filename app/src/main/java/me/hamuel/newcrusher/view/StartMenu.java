@@ -21,7 +21,7 @@ public class StartMenu extends AppCompatActivity {
         });
     }
 
-    public void sendMessage(View view) {
+    private void sendMessage(View view) {
         Intent intent = new Intent(this, MainGame.class);
         startActivity(intent);
     }

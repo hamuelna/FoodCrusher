@@ -22,6 +22,7 @@ public class Board {
     private List<Fallable> fallables = new ArrayList<>();
     private List<Swappable> swappables = new ArrayList<>();
     private List<Creatable> creatables = new ArrayList<>();
+    private List<GameOverable> gameOverables = new ArrayList<>();
 
     public Board(int dim) {
         this.dim = dim;
@@ -39,6 +40,9 @@ public class Board {
         ));
         creatables.addAll(Arrays.asList(
                 new NormalFiller()
+        ));
+        gameOverables.addAll(Arrays.asList(
+                new DefaultGameOver(swappables)
         ));
     }
 
@@ -99,8 +103,6 @@ public class Board {
 
     //refill the damn board after some cell are destroy
     public void refill(){
-        System.out.println("before refill");
-        BoardUtils.printBoard(board);
         List<Cell> cellsToBeFill = new ArrayList<>();
         for (Creatable creatable: creatables){
             cellsToBeFill.addAll(creatable.fillBoard(this));
@@ -150,8 +152,9 @@ public class Board {
         Cell b = findCell(moveCellEvent.getCellB());
         if(isSwappable(a, b)){
             EventBus.getDefault().post(new AnimateCellEvent(swap(a,b), "swap"));
+        }else{
+            EventBus.getDefault().post(new ToggleBlockingEvent());
         }
-
     }
 
     private void cellRemovalProcess(){
