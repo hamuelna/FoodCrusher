@@ -1,4 +1,4 @@
-package me.hamuel.newcrusher.factory;
+package me.hamuel.newcrusher.frontlogic;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -6,7 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.RectF;
 import android.view.View;
-import me.hamuel.newcrusher.model.Cell;
+
 import me.hamuel.newcrusher.model.CellPair;
 import me.hamuel.newcrusher.model.CellView;
 import me.hamuel.newcrusher.model.Coordinate;

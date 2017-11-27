@@ -1,8 +1,12 @@
 package me.hamuel.newcrusher.model;
 
+import android.support.v4.app.DialogFragment;
+
 import me.hamuel.newcrusher.event.*;
 import me.hamuel.newcrusher.logic.*;
 import me.hamuel.newcrusher.utils.BoardUtils;
+import me.hamuel.newcrusher.view.GameOverDialog;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -193,4 +197,5 @@ public class Board {
             }
         }
     }
+
 }

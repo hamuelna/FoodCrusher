@@ -10,8 +10,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.MotionEvent;
 import android.view.View;
 import me.hamuel.newcrusher.event.*;
-import me.hamuel.newcrusher.factory.DefaultAnimator;
-import me.hamuel.newcrusher.factory.IAnimator;
+import me.hamuel.newcrusher.frontlogic.DefaultAnimator;
+import me.hamuel.newcrusher.frontlogic.IAnimator;
 import me.hamuel.newcrusher.model.CellView;
 import me.hamuel.newcrusher.model.Coordinate;
 import org.greenrobot.eventbus.EventBus;
@@ -22,9 +22,6 @@ import java.util.List;
 
 public class GameView extends View{
 
-    public GameView(Context context) {
-        super(context);
-    }
     List<CellView> boardView;
     private Coordinate firstCellCoordinate;
     private CellView firstCell;
@@ -33,7 +30,22 @@ public class GameView extends View{
     private IAnimator animator;
     private String scoreText = "Total Score: ";
     private int currentScore = 0;
+    private int maxProgress = 850;
     private Paint textPaint = new Paint();
+    private RectF progressBar = new RectF(100,1300, maxProgress + 100, 1400);
+    private Paint bgProgressBar = new Paint();
+    private Paint outlineProgressBar = new Paint();
+    private RectF currentProgressBar = new RectF(100, 1300, 100, 1400);
+    private Paint bgCurrentProgressBar = new Paint();
+
+    public GameView(Context context) {
+        super(context);
+        bgProgressBar.setColor(Color.GRAY);
+        outlineProgressBar.setStyle(Paint.Style.STROKE);
+        outlineProgressBar.setStrokeWidth(20);
+        outlineProgressBar.setColor(Color.BLACK);
+        bgCurrentProgressBar.setColor(Color.GREEN);
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -47,8 +59,10 @@ public class GameView extends View{
         }
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(100);
-        canvas.drawText(scoreText + currentScore, 100, 1200, textPaint);
-
+        canvas.drawText(scoreText + currentScore, 100, 1100, textPaint);
+        canvas.drawRect(progressBar, bgProgressBar);
+        canvas.drawRect(progressBar, outlineProgressBar);
+        canvas.drawRect(currentProgressBar, bgCurrentProgressBar);
     }
 
     @Override
@@ -158,16 +172,19 @@ public class GameView extends View{
 
     @Subscribe
     public void onGameOverEvent(GameOverEvent gameOverEvent){
-        DialogFragment dialogFragment = new GameOverDialog();
-        dialogFragment.show(dialogFragment.getFragmentManager(), "gameOver");
         isProcessing = true;
     }
 
     @Subscribe
     public void onScoreEvent(ScoringEvent scoringEvent){
-        System.out.println(scoringEvent.getCombo());
         currentScore += scoringEvent.getScoreIncrease() * scoringEvent.getCombo();
-        invalidate();
+        postInvalidate();
+    }
+
+    @Subscribe
+    public void onTimeTickEvent(TimeTickEvent timeTickEvent){
+        currentProgressBar.right = 100 + (maxProgress * (1-timeTickEvent.getTimePercent()));
+        postInvalidate();
     }
 
 }

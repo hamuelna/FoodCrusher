@@ -2,10 +2,10 @@ package me.hamuel.newcrusher.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import me.hamuel.newcrusher.event.RestartGameEvent;
 import org.greenrobot.eventbus.EventBus;
 

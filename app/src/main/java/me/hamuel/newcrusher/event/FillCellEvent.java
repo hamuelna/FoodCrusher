@@ -1,13 +1,10 @@
 package me.hamuel.newcrusher.event;
 
 import android.content.res.Resources;
-import android.graphics.*;
-import me.hamuel.newcrusher.R;
-import me.hamuel.newcrusher.factory.CellViewFactory;
-import me.hamuel.newcrusher.model.AnimatableRectF;
+
+import me.hamuel.newcrusher.frontlogic.CellViewFactory;
 import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellView;
-import me.hamuel.newcrusher.model.Coordinate;
 
 import java.util.ArrayList;
 import java.util.List;

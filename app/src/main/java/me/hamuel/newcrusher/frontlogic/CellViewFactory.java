@@ -1,4 +1,4 @@
-package me.hamuel.newcrusher.factory;
+package me.hamuel.newcrusher.frontlogic;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
