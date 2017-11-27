@@ -19,6 +19,7 @@ public class FillCellEvent {
 
     private List<Cell> board;
 
+
     public List<CellView> getCellView(Resources resources) {
         List<CellView> boardView = new ArrayList<>();
         for(Cell cell: board){

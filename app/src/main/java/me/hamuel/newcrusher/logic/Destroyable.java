@@ -20,4 +20,9 @@ public interface Destroyable {
      * @return true if there are destroyable cell
      */
     boolean isDestroyable(Board board);
+
+    /**
+     * Convert all the mark destroy cell into a score
+     */
+    int increaseScore(Board board);
 }

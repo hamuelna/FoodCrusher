@@ -1,6 +1,10 @@
 package me.hamuel.newcrusher.logic;
 
 import android.util.Log;
+
+import org.greenrobot.eventbus.EventBus;
+
+import me.hamuel.newcrusher.event.ScoringEvent;
 import me.hamuel.newcrusher.model.Board;
 import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellType;
@@ -29,12 +33,17 @@ public class DefaultDestroyer implements Destroyable {
         return markedCell;
     }
 
-    public Set<Cell> markDestroyCell(Board board){
+    private Set<Cell> markDestroyCell(Board board){
         Cell[][] currentBoard = board.getBoard();
         Set<Cell> combineNeedToBeDestroy = scanHorizontal(currentBoard);
         combineNeedToBeDestroy.addAll(scanVertical(currentBoard));
         return combineNeedToBeDestroy;
 
+    }
+
+    @Override
+    public int increaseScore(Board board) {
+        return markDestroyCell(board).size();
     }
 
     @Override

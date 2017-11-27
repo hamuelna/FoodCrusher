@@ -4,6 +4,7 @@ import android.animation.*;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v4.app.DialogFragment;
 import android.view.MotionEvent;
@@ -15,6 +16,7 @@ import me.hamuel.newcrusher.model.CellView;
 import me.hamuel.newcrusher.model.Coordinate;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -29,6 +31,9 @@ public class GameView extends View{
     private boolean isClickOnce = false;
     private boolean isProcessing = false;
     private IAnimator animator;
+    private String scoreText = "Total Score: ";
+    private int currentScore = 0;
+    private Paint textPaint = new Paint();
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -40,11 +45,16 @@ public class GameView extends View{
                 canvas.drawBitmap(cellView.getType(),null,cellView.getCoordinate(), null);
             }
         }
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(100);
+        canvas.drawText(scoreText + currentScore, 100, 1200, textPaint);
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN && !isProcessing){
+            EventBus.getDefault().post(new RegisterEvent("all"));
             for (CellView cellView: boardView){
                 if(cellView.getCoordinate().contains(event.getX(), event.getY())){
                     if(!isClickOnce){
@@ -79,7 +89,7 @@ public class GameView extends View{
 
 
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAnimateEvent(final AnimateCellEvent animateCellEvent){
         AnimatorSet animatorSet = animator.animateRectTranslation(animateCellEvent.getCellMoves());
         animatorSet.addListener(new AnimatorListenerAdapter() {
@@ -96,9 +106,10 @@ public class GameView extends View{
         });
         animatorSet.start();
         animatorSet.setDuration(500);
+        animatorSet = null;
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRemoveEvent(final RemoveCellEvent removeCellEvent){
         //add animation to scale down
         AnimatorSet animatorSet = animator.animateRectScale(removeCellEvent.getCellToBeRemove());
@@ -120,22 +131,24 @@ public class GameView extends View{
             }
         });
         animatorSet.start();
+        animatorSet = null;
     }
 
-    @Subscribe
-    public void onPartialFillCellEvent(PartialFillCellEvent partialFillCellEvent){
-        System.out.println("onPartialFill was call");
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPartialFillCellEvent(final PartialFillCellEvent partialFillCellEvent){
         boardView.addAll(partialFillCellEvent.getNewCells(getResources()));
         AnimatorSet animatorSet = animator.animateRectTranslation(partialFillCellEvent.getAnimatedCells());
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
+                partialFillCellEvent.getAnimatedCells().clear();
                 EventBus.getDefault().post(new AnimationEndEvent("end refill"));
             }
         });
-        animatorSet.setDuration(1000);
+        animatorSet.setDuration(750);
         animatorSet.start();
+        animatorSet = null;
     }
 
     @Subscribe
@@ -148,6 +161,13 @@ public class GameView extends View{
         DialogFragment dialogFragment = new GameOverDialog();
         dialogFragment.show(dialogFragment.getFragmentManager(), "gameOver");
         isProcessing = true;
+    }
+
+    @Subscribe
+    public void onScoreEvent(ScoringEvent scoringEvent){
+        System.out.println(scoringEvent.getCombo());
+        currentScore += scoringEvent.getScoreIncrease() * scoringEvent.getCombo();
+        invalidate();
     }
 
 }

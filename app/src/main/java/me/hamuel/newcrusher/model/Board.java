@@ -23,6 +23,7 @@ public class Board {
     private List<Swappable> swappables = new ArrayList<>();
     private List<Creatable> creatables = new ArrayList<>();
     private List<GameOverable> gameOverables = new ArrayList<>();
+    private int combo = 1;
 
     public Board(int dim) {
         this.dim = dim;
@@ -84,11 +85,14 @@ public class Board {
 
     public List<Cell> destroy(){
         List<Cell> destroyedCell = new ArrayList<>();
+        int totalScore = 0;
         for(Destroyable destroyer: destroyables){
             if(destroyer.isDestroyable(this)){
+                totalScore += destroyer.increaseScore(this);
                 destroyedCell.addAll(destroyer.destroy(this));
             }
         }
+        EventBus.getDefault().post(new ScoringEvent(totalScore, combo));
         return destroyedCell;
     }
 
@@ -179,10 +183,13 @@ public class Board {
             refill();
         }else if(msg.equals("end refill")){
             if(isDestroyable()){
+                combo++;
                 cellRemovalProcess();
             }else{
+                combo = 1;
                 //tell front that we can now accept input again
                 EventBus.getDefault().post(new ToggleBlockingEvent());
+                EventBus.getDefault().post(new UnRegisterEvent("all"));
             }
         }
     }
