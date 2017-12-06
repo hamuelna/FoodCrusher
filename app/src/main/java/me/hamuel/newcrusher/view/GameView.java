@@ -52,9 +52,9 @@ public class GameView extends View{
         canvas.drawColor(Color.WHITE);
         if(boardView != null){
             for(CellView cellView: boardView){
+                canvas.drawBitmap(cellView.getType(),null,cellView.getCoordinate(), null);
                 canvas.drawRect(cellView.getCoordinate(), cellView.getPaint());
                 canvas.drawRect(cellView.getCoordinate(), cellView.getBorderPaint());
-                canvas.drawBitmap(cellView.getType(),null,cellView.getCoordinate(), null);
             }
         }
         textPaint.setColor(Color.BLACK);

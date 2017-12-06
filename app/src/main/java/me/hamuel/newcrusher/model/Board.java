@@ -33,6 +33,7 @@ public class Board {
         this.dim = dim;
         board = new Cell[dim][dim];
         destroyables.addAll(Arrays.asList(
+                new BBQDestroyer(),
                 new DefaultDestroyer()
         ));
         fallables.addAll(
@@ -44,6 +45,7 @@ public class Board {
                 new DefaultSwapper(destroyables)
         ));
         creatables.addAll(Arrays.asList(
+                new BBQFiller(),
                 new NormalFiller()
         ));
         gameOverables.addAll(Arrays.asList(
@@ -94,6 +96,7 @@ public class Board {
             if(destroyer.isDestroyable(this)){
                 totalScore += destroyer.increaseScore(this);
                 destroyedCell.addAll(destroyer.destroy(this));
+                break; //pick one strategy only
             }
         }
         EventBus.getDefault().post(new ScoringEvent(totalScore, combo));

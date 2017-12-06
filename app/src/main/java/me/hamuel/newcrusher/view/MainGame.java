@@ -23,7 +23,7 @@ public class MainGame extends AppCompatActivity {
     private Board board;
     private Timer timer;
     private final int DIM = 8;
-    private final int TIME_LIMIT = 30;
+    private final int TIME_LIMIT = 300;
 
     @Override
     protected void onStop() {

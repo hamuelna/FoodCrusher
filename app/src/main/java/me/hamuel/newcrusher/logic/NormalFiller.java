@@ -37,7 +37,7 @@ public class NormalFiller implements Creatable {
     private List<CellType> getAllValidTypes(){
         List<CellType> cellTypes = new ArrayList<>();
         for(CellType cellType: CellType.values()){
-            if(cellType != CellType.BLANK){
+            if(cellType != CellType.BLANK && cellType != CellType.SP_BBQ){ //will make it more better next time
                 cellTypes.add(cellType);
             }
         }

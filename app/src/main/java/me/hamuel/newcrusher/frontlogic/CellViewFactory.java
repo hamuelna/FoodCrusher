@@ -47,6 +47,12 @@ public class CellViewFactory {
                 type = BitmapFactory.decodeResource(resources, R.drawable.burger);
                 break;
             }
+            case SP_BBQ: {
+                paint = new Paint();
+                paint.setColor(Color.RED);
+                type = BitmapFactory.decodeResource(resources, R.drawable.bbq);
+                break;
+            }
         }
         return new CellView(
                 new AnimatableRectF(cord.getLeft(), cord.getTop(), cord.getRight(), cord.getBottom()),
