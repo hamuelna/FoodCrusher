@@ -27,7 +27,7 @@ public class BBQFiller implements Creatable {
 
     private Set<Cell> detectConsecutiveBlank(Board board_){
         Set<Cell> combineDetected = detectHorizontal(board_);
-        combineDetected.addAll(detectHorizontal(board_));
+        combineDetected.addAll(detectVertical(board_));
         return combineDetected;
 
     }
