@@ -23,7 +23,7 @@ public class MainGame extends AppCompatActivity {
     private Board board;
     private Timer timer;
     private final int DIM = 8;
-    private final int TIME_LIMIT = 30;
+    private final int TIME_LIMIT = 120; //unit in secs
 
     @Override
     protected void onStop() {
@@ -58,7 +58,6 @@ public class MainGame extends AppCompatActivity {
 
     @Subscribe
     public void onRestartGameEvent(RestartGameEvent restartGameEvent){
-        System.out.println("The restart signal was sent");
         if(restartGameEvent.getEventChoice().equals("restart")){
             //actually restart the game
             Intent intent = getIntent();
