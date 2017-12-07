@@ -80,6 +80,7 @@ public class InitFiller implements Creatable {
         List<CellType> types = new ArrayList<>();
         Set<CellType> forbiddenTypes = new HashSet<>();
         forbiddenTypes.add(CellType.BLANK);
+        forbiddenTypes.add(CellType.BBQ);
         forbiddenTypes.add(scanLeft(board, i, j));
         forbiddenTypes.add(scanDown(board, i, j));
         forbiddenTypes.add(scanRight(board, i, j));

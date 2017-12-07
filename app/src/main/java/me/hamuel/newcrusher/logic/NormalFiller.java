@@ -5,8 +5,10 @@ import me.hamuel.newcrusher.model.Cell;
 import me.hamuel.newcrusher.model.CellType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Fill the board on all blank cell with a random cell with other type
@@ -36,8 +38,11 @@ public class NormalFiller implements Creatable {
 
     private List<CellType> getAllValidTypes(){
         List<CellType> cellTypes = new ArrayList<>();
+        Set<CellType> invalidType = new HashSet<>();
+        invalidType.add(CellType.BLANK);
+        invalidType.add(CellType.BBQ);
         for(CellType cellType: CellType.values()){
-            if(cellType != CellType.BLANK){
+            if(cellType != CellType.BLANK && cellType != CellType.BBQ){
                 cellTypes.add(cellType);
             }
         }
